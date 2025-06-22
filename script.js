@@ -70,7 +70,12 @@ function createGame(player1, player2){
       if(board.checkWin()){
         currentPlayer.addScore()
         cleanup()
-        gameManager.displayMessage( `${currentPlayer.symbol} wins`)
+        if(currentPlayer==player1){
+          gameManager.displayMessage( `${document.querySelector("#player1Name").value} wins`)
+        }
+        else{
+          gameManager.displayMessage( `${document.querySelector("#player2Name").value} wins`)
+        }
       }
       if(board.checkDraw()){
         cleanup()
@@ -90,7 +95,7 @@ function createGame(player1, player2){
   function cleanup(){
     buttons.forEach((button)=>{button.removeEventListener("click",startGame)})
   }
-  return {startGame}
+  return {startGame,cleanup}
 }
 
 
@@ -109,11 +114,17 @@ function createDisplay(){
 function createGameManager(){
   const modal=document.querySelector("dialog")
   const startButton=document.querySelector(".startButton")
+  const restartButton=document.querySelector(".restartButton")
   const display=document.querySelector(".display")
   const player1=createUser("X")
   const player2=createUser("O")
+  let game;
   startButton.addEventListener("click",()=>{
     modal.close()
+    game=createGame(player1, player2)
+  })
+  restartButton.addEventListener("click",()=>{
+    game.cleanup()
     game=createGame(player1, player2)
   })
   function displayMessage(message){
